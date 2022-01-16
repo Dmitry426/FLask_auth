@@ -6,9 +6,6 @@ services:
       target: development
     environment:
       - PORT_APP=3000
-      - WORKERS=2
-      - ASYNC_CORES=2000
-      - PROTOCOL=http
       - SQLALCHEMY_USERNAME:pguser
       - SQLALCHEMY_PASSWORD:pgpassword
       - SQLALCHEMY_DATABASE_NAME:auth_db
