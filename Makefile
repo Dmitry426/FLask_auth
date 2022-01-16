@@ -1,3 +1,5 @@
+dev: pre-commit
+
 pre-commit:
 	pre-commit install
 	pre-commit autoupdate
