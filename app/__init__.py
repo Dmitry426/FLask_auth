@@ -12,7 +12,7 @@ logger = create_logger(app)
 
 
 @app.route("/health")
-def root_handler():
+def health_handler():
     """Check app health
     ---
     tags:
