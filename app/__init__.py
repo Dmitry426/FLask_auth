@@ -1,3 +1,5 @@
+from typing import Optional
+
 from flasgger import Swagger
 from flask import Flask
 from flask.logging import create_logger
@@ -39,7 +41,7 @@ def on_startup():
 
 
 @app.teardown_request
-def on_shutdown(error=None):
+def on_shutdown(error: Optional[BaseException] = None):
     """Teardown application and services."""
     if error is not None:
         logger.exception("%s: %s", type(error).__name__, error)
