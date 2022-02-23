@@ -1,3 +1,5 @@
+.PHONY: dev pre-commit isort black mypy flake8 pylint lint
+
 dev: pre-commit
 
 pre-commit:
