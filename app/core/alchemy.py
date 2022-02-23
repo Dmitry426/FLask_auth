@@ -22,7 +22,7 @@ def _build_url(cfg: SQLAlchemySettings) -> str:
         parts.append(cfg.username)
 
     if cfg.password is not None:
-        parts.append(f":{cfg.password}")
+        parts.append(f":{cfg.password.get_secret_value()}")
 
     parts.append(f"@{cfg.host}")
 
