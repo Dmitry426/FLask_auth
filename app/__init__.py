@@ -4,7 +4,7 @@ from flasgger import Swagger
 from flask import Flask
 from flask.logging import create_logger
 
-from .core.alchemy import init_alchemy
+from .core.alchemy import init_alchemy, db
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -38,6 +38,7 @@ def health_handler():
 def on_startup():
     """Prepare application and services."""
     init_alchemy(app)
+    db.create_all()
 
 
 @app.teardown_request
