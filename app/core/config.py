@@ -15,9 +15,9 @@ class SQLAlchemySettings(BaseSettings):
     connector: str = Field("postgresql", env="SQLALCHEMY_SCHEMA")
     host: str = Field("postgres", env="SQLALCHEMY_HOST")
     port: Optional[int] = Field(5432, env="SQLALCHEMY_PORT")
-    username: Optional[str] = Field('pguser', env="SQLALCHEMY_USERNAME")
-    password: Optional[SecretStr] = Field('pgpassword', env="SQLALCHEMY_PASSWORD")
-    database_name: Optional[str] = Field('auth_db', env="SQLALCHEMY_DATABASE_NAME")
+    username: Optional[str] = Field(None, env="SQLALCHEMY_USERNAME")
+    password: Optional[SecretStr] = Field(None, env="SQLALCHEMY_PASSWORD")
+    database_name: Optional[str] = Field(None, env="SQLALCHEMY_DATABASE_NAME")
 
 
 class RedisSettings(BaseSettings):

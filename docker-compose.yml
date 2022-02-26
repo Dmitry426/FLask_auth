@@ -11,6 +11,8 @@ services:
       - SQLALCHEMY_DATABASE_NAME:auth_db
     ports:
       - "127.0.0.1:3000:3000"
+    env_file:
+      - ./.env
     volumes:
       - "./app:/src/app"
     depends_on:
