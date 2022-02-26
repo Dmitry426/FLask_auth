@@ -11,6 +11,8 @@ services:
       - SQLALCHEMY_DATABASE_NAME:auth_db
     ports:
       - "127.0.0.1:3000:3000"
+    env_file:
+      - ./.env
     volumes:
       - "./app:/src/app"
     depends_on:
@@ -20,6 +22,8 @@ services:
   redis:
     image: redis:6-alpine
     restart: on-failure
+    ports:
+      - "6379:6379"
     volumes:
       - "redis-data:/data"
 
@@ -27,6 +31,8 @@ services:
   postgres:
     image: postgres:14
     restart: on-failure
+    ports:
+      - "5432:5432"
     volumes:
       - "postgres-data:/var/lib/postgresql"
     environment:

@@ -11,7 +11,7 @@ SQLAlchemy = "~1.4"
 psycopg2-binary = "~2.9"
 Flask-SQLAlchemy = "~2.5"
 redis = "~4.1"
-pydantic = "~1.9"
+pydantic = { version = "~1.9", extras = ["dotenv"] }
 gevent = "~21.12"
 pyuwsgi = "~2.0"
 flasgger = "~0.9"
