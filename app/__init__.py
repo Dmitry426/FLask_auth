@@ -1,14 +1,50 @@
+from datetime import timedelta
+from http import HTTPStatus
 from typing import Optional
 
 from flasgger import Swagger
 from flask import Flask
 from flask.logging import create_logger
+from flask_jwt_extended import JWTManager
 
-from .core.alchemy import init_alchemy, db
+from .api.auth import auth
+from .core.alchemy import db, init_alchemy
+from .core.config import JWTSettings
+from .core.redis import redis
+from .models.db_models import User
+from .serializers.auth import ErrorBody
 
 app = Flask(__name__)
 swagger = Swagger(app)
 logger = create_logger(app)
+
+# Setup the Flask-JWT-Extended extension
+jwt_conf = JWTSettings()
+app.config["JWT_SECRET_KEY"] = jwt_conf.secret
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=jwt_conf.access_exp)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=jwt_conf.refresh_exp)
+app.config["JWT_ERROR_MESSAGE_KEY"] = "error"
+jwt = JWTManager(app)
+
+# Setup routing
+app.register_blueprint(auth, url_prefix="/auth")
+
+
+@jwt.token_in_blocklist_loader
+def check_if_token_is_revoked(jwt_header, jwt_payload):
+    jti = jwt_payload["jti"]
+    token_in_redis = redis.get(jti)
+    return token_in_redis is not None
+
+
+@jwt.user_lookup_loader
+def user_lookup_callback(_jwt_header, jwt_data):
+    identity = jwt_data["sub"]["user_id"]
+    user = User.query.filter_by(id=identity).one_or_none()
+    if not user:
+        msg = "Something went wrong"
+        return ErrorBody(error=msg), HTTPStatus.CONFLICT
+    return user
 
 
 @app.route("/health")

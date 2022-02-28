@@ -1,8 +1,4 @@
-__all__ = [
-    "RedisSettings",
-    "SQLAlchemySettings",
-    "FlaskSettings",
-]
+__all__ = ["RedisSettings", "SQLAlchemySettings", "FlaskSettings", "JWTSettings"]
 
 from typing import Optional
 
@@ -34,3 +30,11 @@ class FlaskSettings(BaseSettings):
     host: str = Field("0.0.0.0", env="FLASK_HOST")
     port: int = Field(3000, env="PORT_APP")
     debug: bool = Field(True, env="FLASK_DEBUG")
+
+
+class JWTSettings(BaseSettings):
+    """Represents JWT settings."""
+
+    secret: str = Field(None, env="JWT_SECRET_KEY")
+    access_exp: int = Field(None, env="JWT_ACCESS_TOKEN_EXPIRES")
+    refresh_exp: int = Field(None, env="JWT_REFRESH_TOKEN_EXPIRES")
