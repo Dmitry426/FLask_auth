@@ -70,7 +70,7 @@ def refresh(body: RefreshBody):
     return get_new_tokens(user, request.user_agent.string)
 
 
-@auth.route("/logout", methods=["GET"])
+@auth.route("/logout", methods=["POST"])
 @validate()
 @jwt_required()
 def logout():

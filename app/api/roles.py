@@ -40,7 +40,7 @@ def update_role(role_id: int, body: RoleBody):
     role = Role.query.filter_by(id=role_id).one_or_none()
     if not role:
         msg = "No role with this id"
-        return ErrorBody(error=msg), HTTPStatus.CONFLICT
+        return ErrorBody(error=msg), HTTPStatus.NOT_FOUND
     name_exist = Role.query.filter_by(name=body.name).one_or_none()
     if name_exist:
         msg = "Role with his name already exist"
@@ -57,6 +57,8 @@ def delete_role(role_id: int):
     role = Role.query.filter_by(id=role_id).one_or_none()
     if not role:
         msg = "No role with this id"
-        return ErrorBody(error=msg), HTTPStatus.CONFLICT
+        return ErrorBody(error=msg), HTTPStatus.NOT_FOUND
+    db.session.delete(role)
+    db.session.commit()
     msg = "Role successfully deleted"
     return OkBody(result=msg), HTTPStatus.NO_CONTENT
