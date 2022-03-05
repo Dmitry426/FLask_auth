@@ -1,7 +1,3 @@
-__all__ = [
-    "User",
-    "Role",
-    "Session"
-]
+__all__ = ["User", "Role", "Session"]
 
-from .db_models import User, Role, Session
+from .db_models import Role, Session, User

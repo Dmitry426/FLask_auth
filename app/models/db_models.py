@@ -1,14 +1,16 @@
-from datetime import datetime
 import uuid
+from datetime import datetime
 
 from sqlalchemy.dialects.postgresql import UUID
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from ..core.alchemy import db
 
-
-users_roles = db.Table('users_roles', db.Model.metadata,
-    db.Column('user_id', db.ForeignKey('users.id')),
-    db.Column('role_id', db.ForeignKey('roles.id'))
+users_roles = db.Table(
+    "users_roles",
+    db.Model.metadata,
+    db.Column("user_id", db.ForeignKey("users.id")),
+    db.Column("role_id", db.ForeignKey("roles.id")),
 )
 
 
@@ -28,6 +30,12 @@ class User(db.Model):
 
     def __repr__(self):
         return f"<User {self.login}>"
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
 
 
 class Role(db.Model):
@@ -51,8 +59,8 @@ class Session(db.Model):
         unique=True,
         nullable=False,
     )
-    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey('users.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('sessions', lazy=True))
+    user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", backref=db.backref("sessions", lazy=True))
     user_agent = db.Column(db.String)
     auth_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
