@@ -15,7 +15,7 @@ def get_new_tokens(user: User, user_agent: str) -> TokenBody:
     identity = {"user_id": user.id, "roles": [role.name for role in user.roles]}
     access_token = create_access_token(identity=identity)
     refresh_token = create_refresh_token(identity=identity)
-    refresh_key = str(user.id) + "_" + user_agent
+    refresh_key = f"{user.id}_{user_agent}"
 
     # Put refresh token in redis for validate refreshing
     redis.set(refresh_key, refresh_token, ex=timedelta(days=JWTSettings().refresh_exp))

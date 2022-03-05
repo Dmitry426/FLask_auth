@@ -1,5 +1,6 @@
 from datetime import timedelta
 from http import HTTPStatus
+from secrets import compare_digest
 
 from flask import Blueprint, request
 from flask_jwt_extended import current_user, decode_token, get_jwt, jwt_required
@@ -59,8 +60,9 @@ def refresh(body: RefreshBody):
         msg = "Something went wrong"
         return ErrorBody(error=msg), HTTPStatus.CONFLICT
 
-    refresh_key = str(user.id) + "_" + request.user_agent.string
-    if redis.get(refresh_key) != body.refresh_token:
+    refresh_key = f"{user.id}_{request.user_agent.string}"
+    refresh_token = redis.get(refresh_key)
+    if not compare_digest(refresh_token, body.refresh_token):
         msg = "Refresh token not valid"
         return ErrorBody(error=msg), HTTPStatus.CONFLICT
 
@@ -75,7 +77,7 @@ def logout():
     jti = get_jwt()["jti"]
     redis.set(jti, "", ex=timedelta(hours=1))
 
-    refresh_key = str(current_user.id) + "_" + request.user_agent.string
+    refresh_key = f"{current_user.id}_{request.user_agent.string}"
     redis.delete(refresh_key)
 
     msg = "User successfully logout"

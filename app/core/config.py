@@ -35,6 +35,6 @@ class FlaskSettings(BaseSettings):
 class JWTSettings(BaseSettings):
     """Represents JWT settings."""
 
-    secret: str = Field(None, env="JWT_SECRET_KEY")
-    access_exp: int = Field(None, env="JWT_ACCESS_TOKEN_EXPIRES")
-    refresh_exp: int = Field(None, env="JWT_REFRESH_TOKEN_EXPIRES")
+    secret: Optional[str] = Field(None, env="JWT_SECRET_KEY")
+    access_exp: int = Field(60, env="JWT_ACCESS_TOKEN_EXPIRES")
+    refresh_exp: int = Field(7, env="JWT_REFRESH_TOKEN_EXPIRES")
