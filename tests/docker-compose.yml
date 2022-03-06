@@ -59,3 +59,4 @@ volumes:
     driver: "local"
   redis_data_test:
     driver: "local"
+
