@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from pydantic import BaseModel, validator
 
@@ -38,3 +39,8 @@ class TokenBody(BaseModel):
 
 class RefreshBody(BaseModel):
     refresh_token: str
+
+
+class HistoryBody(BaseModel):
+    user_agent: str
+    auth_date: datetime

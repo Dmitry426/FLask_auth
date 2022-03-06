@@ -3,13 +3,26 @@ from http import HTTPStatus
 from secrets import compare_digest
 
 from flask import Blueprint, request
-from flask_jwt_extended import current_user, decode_token, get_jwt, jwt_required
+from flask_jwt_extended import (
+    current_user,
+    decode_token,
+    get_current_user,
+    get_jwt,
+    jwt_required,
+)
 from flask_pydantic import validate
 
 from app.core.alchemy import db
 from app.core.redis import redis
 from app.models.db_models import Session, User
-from app.serializers.auth import ErrorBody, LoginBody, OkBody, RefreshBody, RegisterBody
+from app.serializers.auth import (
+    ErrorBody,
+    HistoryBody,
+    LoginBody,
+    OkBody,
+    RefreshBody,
+    RegisterBody,
+)
 from app.utils import get_new_tokens
 
 auth = Blueprint("auth", __name__)
@@ -37,6 +50,31 @@ def registration(body: RegisterBody):
     return OkBody(result=msg), HTTPStatus.CREATED
 
 
+@auth.route("/change", methods=["POST"])
+@validate()
+@jwt_required()
+def change_password(body: RegisterBody):
+    user_uuid = get_current_user().id
+    user = User.query.filter_by(id=user_uuid).one_or_none()
+    new_login_exist = db.session.query(
+        db.exists().where(User.login == body.login)
+    ).scalar()
+
+    if new_login_exist:
+        msg = "User with this login already exist, please change login"
+        return ErrorBody(error=msg), HTTPStatus.CONFLICT
+
+    if user.check_password(body.password):
+        msg = "This password matches with the current one, Please enter new one "
+        return ErrorBody(error=msg), HTTPStatus.CONFLICT
+
+    user.login = body.login
+    user.set_password(body.password)
+    db.session.commit()
+    msg = "Password and Login successfully changed"
+    return OkBody(result=msg), HTTPStatus.ACCEPTED
+
+
 @auth.route("/login", methods=["POST"])
 @validate()
 def login(body: LoginBody):
@@ -48,6 +86,18 @@ def login(body: LoginBody):
     db.session.add(session)
     db.session.commit()
     return get_new_tokens(user, request.user_agent.string)
+
+
+@auth.route("/history", methods=["GET"])
+@validate(response_many=True)
+@jwt_required()
+def auth_history():
+    user_uuid = get_current_user().id
+    history = Session.query.filter_by(user_id=user_uuid).all()
+    return [
+        HistoryBody(user_agent=row.user_agent, auth_date=row.auth_date)
+        for row in history
+    ]
 
 
 @auth.route("/refresh", methods=["POST"])
