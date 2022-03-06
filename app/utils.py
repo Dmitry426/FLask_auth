@@ -1,6 +1,14 @@
 from datetime import timedelta
+from functools import wraps
 
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask import abort
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    current_user,
+    get_jwt,
+    verify_jwt_in_request,
+)
 
 from app.core.config import JWTSettings
 from app.core.redis import redis
@@ -20,3 +28,18 @@ def get_new_tokens(user: User, user_agent: str) -> TokenBody:
     # Put refresh token in redis for validate refreshing
     redis.set(refresh_key, refresh_token, ex=timedelta(days=JWTSettings().refresh_exp))
     return TokenBody(access_token=access_token, refresh_token=refresh_token)
+
+
+def permissions_required(role: str):
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            verify_jwt_in_request()
+            user_roles = get_jwt()["sub"]["roles"]
+            if current_user.is_superuser or role in user_roles:
+                return fn(*args, **kwargs)
+            return abort(403)
+
+        return decorator
+
+    return wrapper

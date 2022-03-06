@@ -1,13 +1,16 @@
+import http
 from datetime import timedelta
 from http import HTTPStatus
 from typing import Optional
 
 from flasgger import Swagger
 from flask import Flask
+from flask.json import jsonify
 from flask.logging import create_logger
 from flask_jwt_extended import JWTManager
 
 from .api.auth import auth
+from .api.roles import roles
 from .core.alchemy import db, init_alchemy
 from .core.config import JWTSettings
 from .core.redis import redis
@@ -28,6 +31,12 @@ jwt = JWTManager(app)
 
 # Setup routing
 app.register_blueprint(auth, url_prefix="/auth")
+app.register_blueprint(roles, url_prefix="/roles")
+
+
+@app.errorhandler(403)
+def permission_denied(e):
+    return jsonify({"error": "You don't have permissions"}), http.HTTPStatus.FORBIDDEN
 
 
 @jwt.token_in_blocklist_loader
