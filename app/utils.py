@@ -35,9 +35,8 @@ def permissions_required(role: str):
         @wraps(fn)
         def decorator(*args, **kwargs):
             verify_jwt_in_request()
-            user = current_user
             user_roles = get_jwt()["sub"]["roles"]
-            if user.is_superuser or role in user_roles:
+            if current_user.is_superuser or role in user_roles:
                 return fn(*args, **kwargs)
             return abort(403)
 
