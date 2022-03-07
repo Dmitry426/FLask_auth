@@ -1,6 +1,6 @@
 import asyncio
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import aioredis
 import asyncpg
@@ -8,6 +8,7 @@ import backoff
 import pytest
 from aiohttp import ClientSession
 from aioredis import Redis
+from asyncpg import Connection
 from pydantic import BaseModel
 
 from .settings import TestSettings
@@ -91,12 +92,13 @@ async def postgres_client_fixture(settings: TestSettings):
         port=pg_settings.port,
         dbname=pg_settings.dbname,
     )
+    await wait_for_ping(conn, settings)
     yield conn
     await conn.execute("DROP TABLE %s", pg_settings.dbname)
     await conn.close()
 
 
-async def wait_for_ping(client: Redis, settings: TestSettings):
+async def wait_for_ping(client: Union[Redis, Connection], settings: TestSettings):
     """Wait for service client will answer to ping."""
     client_name = type(client).__name__
 
