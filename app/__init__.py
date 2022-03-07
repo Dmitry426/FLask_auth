@@ -11,6 +11,7 @@ from flask_jwt_extended import JWTManager
 
 from .api.auth import auth
 from .api.roles import roles
+from .api.users import users
 from .core.alchemy import db, init_alchemy
 from .core.config import JWTSettings
 from .core.redis import redis
@@ -32,6 +33,7 @@ jwt = JWTManager(app)
 # Setup routing
 app.register_blueprint(auth, url_prefix="/auth")
 app.register_blueprint(roles, url_prefix="/roles")
+app.register_blueprint(users, url_prefix="/users")
 
 
 @app.errorhandler(403)
