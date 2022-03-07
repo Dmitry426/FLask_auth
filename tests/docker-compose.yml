@@ -49,7 +49,7 @@ services:
       env_file:
         - ./.env
       volumes:
-        - "../functional:/src/app"
+        - "./functional:/src/app"
       links:
         - redis_test
         - postgres_test
@@ -59,4 +59,3 @@ volumes:
     driver: "local"
   redis_data_test:
     driver: "local"
-
