@@ -62,4 +62,3 @@ RUN poetry install
 
 # WARNING! Don't forget to mount "./app:/src/app"
 WORKDIR /src
-
