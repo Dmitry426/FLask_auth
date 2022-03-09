@@ -10,9 +10,8 @@ services:
       - "127.0.0.1:3000:3000"
     environment:
       - PORT_APP=3000
-      - SQLALCHEMY_USERNAME:pguser
-      - SQLALCHEMY_PASSWORD:pgpassword
-      - SQLALCHEMY_DATABASE_NAME:auth_db
+      - SQLALCHEMY_HOST=postgres_test
+      - REDIS_HOST=redis_test
     env_file:
       - ../.env
     volumes:
