@@ -12,10 +12,12 @@ backoff = "^1.11.1"
 pytest = "^7.0.1"
 aioredis = "^2.0.1"
 pydantic = "^1.9.0"
+python-dotenv = "^0.19.2"
+requests = "^2.27.1"
+pytest-asyncio = "^0.18.2"
 
 [tool.poetry.dev-dependencies]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
