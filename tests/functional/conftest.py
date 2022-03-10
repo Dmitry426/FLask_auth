@@ -79,7 +79,6 @@ def make_request_fixture(http_client):
         if jwt:
             headers = {"Authorization": "Bearer {}".format(jwt)}
 
-        url = f"/auth/{url}"
         logger.debug("URL: %s", url)
 
         req = http_client
