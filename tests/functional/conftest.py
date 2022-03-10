@@ -13,7 +13,7 @@ from pydantic import BaseModel
 
 from .settings import TestSettings
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -64,10 +64,21 @@ async def http_client_fixture(settings, redis_client) -> ClientSession:
 def make_request_fixture(http_client):
     """Make HTTP-request"""
 
-    async def inner(method: str, url: str,
-                    params: Optional[Dict[str, Any]] = None,
-                    json: Optional[Dict[str, Any]] = None) -> HTTPResponse:
+    async def inner(
+        method: str,
+        url: str,
+        params: Optional[Dict[str, Any]] = None,
+        json: Optional[Dict[str, Any]] = None,
+        jwt: Optional[str] = None,
+    ) -> HTTPResponse:
+
         params = params or {}
+        json = json or {}
+        headers = {}
+
+        if jwt:
+            headers = {"Authorization": "Bearer {}".format(jwt)}
+
         url = f"/auth/{url}"
         logger.debug("URL: %s", url)
 
@@ -78,7 +89,7 @@ def make_request_fixture(http_client):
         if method == "POST":
             req = req.post
 
-        async with req(url, params=params, json=json) as response:
+        async with req(url, params=params, json=json, headers=headers) as response:
             body = await response.json()
             logger.warning("Response: %s", body)
 
@@ -97,7 +108,7 @@ async def postgres_client_fixture(settings: TestSettings):
         user=settings.postgres_username,
         password=settings.postgres_password,
         host=settings.postgres_host,
-        port=settings.postgres_port
+        port=settings.postgres_port,
     )
     yield conn
     await conn.execute("DROP TABLE %s", settings.postgres_dbname)
@@ -105,7 +116,7 @@ async def postgres_client_fixture(settings: TestSettings):
 
 
 async def wait_for_ping(client: Union[Redis, Connection], settings: TestSettings):
-    """Wait for service client to answer """
+    """Wait for service client to answer"""
     client_name = type(client).__name__
 
     @backoff.on_exception(
