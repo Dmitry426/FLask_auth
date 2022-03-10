@@ -48,7 +48,8 @@ services:
       env_file:
         - ./.env
       volumes:
-        - "./functional:/src/app"
+        - "./functional:/src/tests"
+        - "./pytest.ini:/src/pytest.ini"
       links:
         - redis_test
         - postgres_test
