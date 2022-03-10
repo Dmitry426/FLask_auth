@@ -4,6 +4,7 @@ services:
     build:
       context: .
       target: development
+    image: auth_server
     environment:
       - PORT_APP=3000
       - SQLALCHEMY_USERNAME:pguser
