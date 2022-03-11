@@ -8,14 +8,16 @@ from flask import Flask
 from flask.json import jsonify
 from flask.logging import create_logger
 from flask_jwt_extended import JWTManager
+from sqlalchemy.exc import IntegrityError
 
 from .api.auth import auth
 from .api.roles import roles
 from .core.alchemy import db, init_alchemy
-from .core.config import JWTSettings
+from .core.config import AppSettings, JWTSettings
 from .core.redis import redis
 from .models.db_models import User
 from .serializers.auth import ErrorBody
+from .utils import create_superuser
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -84,6 +86,13 @@ def on_startup():
     """Prepare application and services."""
     init_alchemy(app)
     db.create_all()
+
+    app_settings = AppSettings()
+    if app_settings.superuser_enable:
+        try:
+            create_superuser()
+        except IntegrityError:
+            pass
 
 
 @app.teardown_request
