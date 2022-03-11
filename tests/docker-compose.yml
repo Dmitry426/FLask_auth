@@ -20,42 +20,37 @@ services:
       - redis_test
       - postgres_test
 
+  tests:
+      build:
+        context: ..
+        target: development
+      command: [ "pytest", "-v" ]
+      env_file:
+        - ../.env
+      environment:
+        - SQLALCHEMY_HOST=postgres_test
+        - REDIS_HOST=redis_test
+      volumes:
+        - "../app:/src/app"
+        - "./functional:/src/tests"
+        - "./pytest.ini:/src/pytest.ini"
+      depends_on:
+        - redis_test
+        - postgres_test
+        - app
+
   redis_test:
     image: redis:6-alpine
     restart: on-failure
     ports:
       - "6379:6379"
-    volumes:
-      - redis_data_test:/data
-
 
   postgres_test:
     image: postgres:14
     restart: on-failure
     ports:
       - "5432:5432"
-    volumes:
-      - postgres_data_test:/var/lib/postgresql
     environment:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpassword
       POSTGRES_DB: auth_db
-
-
-  tests:
-      build: .
-      command: [ "pytest", "-v" ]
-      env_file:
-        - ./.env
-      volumes:
-        - "./functional:/src/tests"
-        - "./pytest.ini:/src/pytest.ini"
-      links:
-        - redis_test
-        - postgres_test
-
-volumes:
-  postgres_data_test:
-    driver: "local"
-  redis_data_test:
-    driver: "local"
