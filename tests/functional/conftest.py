@@ -60,8 +60,8 @@ async def http_client_fixture(settings, redis_client) -> ClientSession:
         yield session
 
 
-@pytest_asyncio.fixture(name="make_request")
-def make_request_fixture(http_client):
+@pytest_asyncio.fixture(name="make_request", scope="session")
+def make_request_fixture(http_client: ClientSession):
     """Make HTTP-request"""
 
     async def inner(
