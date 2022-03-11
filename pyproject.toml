@@ -17,6 +17,9 @@ pyuwsgi = "~2.0"
 flasgger = "~0.9"
 Flask-Pydantic = "~0.9"
 Flask-JWT-Extended = "~4.3"
+aioredis = "^2.0.1"
+aiohttp = "^3.8.1"
+backoff = "^1.11.1"
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }
