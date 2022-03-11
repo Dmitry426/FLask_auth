@@ -71,7 +71,6 @@ def make_request_fixture(http_client):
         json: Optional[Dict[str, Any]] = None,
         jwt: Optional[str] = None,
     ) -> HTTPResponse:
-
         params = params or {}
         json = json or {}
         headers = {}
@@ -81,14 +80,9 @@ def make_request_fixture(http_client):
 
         logger.debug("URL: %s", url)
 
-        req = http_client
-        if method == "GET":
-            req = req.get
-
-        if method == "POST":
-            req = req.post
-
-        async with req(url, params=params, json=json, headers=headers) as response:
+        async with http_client.request(
+            method, url, params=params, json=json, headers=headers
+        ) as response:
             body = await response.json()
             logger.warning("Response: %s", body)
 
