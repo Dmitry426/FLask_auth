@@ -8,7 +8,7 @@ from app.core.alchemy import db
 from app.models.db_models import Role, User
 from app.serializers.auth import ErrorBody
 from app.serializers.roles import RoleBody
-from app.serializers.users import PaginationUsersBody, QueryPaginationBode, UserBody
+from app.serializers.users import PaginationUsersBody, QueryPaginationBody, UserBody
 from app.utils import permissions_required
 
 users = Blueprint("users", __name__)
@@ -17,7 +17,7 @@ users = Blueprint("users", __name__)
 @users.route("/", methods=["GET"])
 @validate()
 @permissions_required("admin")
-def roles_list(query: QueryPaginationBode):
+def roles_list(query: QueryPaginationBody):
     if query.search:
         queryset = User.query.filter(
             func.lower(User.login).startswith(query.search.lower())

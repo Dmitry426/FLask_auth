@@ -19,7 +19,7 @@ class PaginationUsersBody(BaseModel):
     results: List[UserBody]
 
 
-class QueryPaginationBode(BaseModel):
+class QueryPaginationBody(BaseModel):
     search: Optional[str]
     page: int = 1
     per_page: int = 20
