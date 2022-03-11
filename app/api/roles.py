@@ -27,7 +27,7 @@ def create_role(body: RoleBody):
     if name_exist:
         msg = "Role with his name already exist"
         return ErrorBody(error=msg), HTTPStatus.CONFLICT
-    role = Role(name=body.name)
+    role = Role(**body.dict())
     db.session.add(role)
     db.session.commit()
     return RoleBody(id=role.id, name=role.name), HTTPStatus.CREATED
