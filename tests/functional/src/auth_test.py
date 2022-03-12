@@ -24,8 +24,8 @@ async def test_create_user(make_request):
     )
     assert response.status == HTTPStatus.CREATED
     logger.info("Response status : %s", response.status)
-    assert response.body["result"] == "User successfully created"
-    logger.info("Response status : %s", response.body)
+    assert response.body["login"] == user["login"]
+    logger.info("Response body : %s", response.body)
 
 
 async def test_login_user(make_request):
