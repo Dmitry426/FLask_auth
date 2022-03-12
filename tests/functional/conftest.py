@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from http import HTTPStatus
 from typing import Any, Dict, Optional, Union
 
 import aioredis
@@ -93,6 +94,24 @@ def make_request_fixture(http_client: ClientSession):
             )
 
     return inner
+
+
+@pytest_asyncio.fixture(name="superadmin_token", scope="session")
+async def superadmin_token_fixture(make_request):
+    superadmin_data = {"login": "superuser", "password": "superpassword"}
+    response = await make_request(
+        method="POST",
+        url="/auth/login",
+        json=superadmin_data,
+    )
+    assert response.status == HTTPStatus.OK
+    access_token = response.body["access_token"]
+    yield access_token
+    await make_request(
+        method="POST",
+        url="/auth/logout",
+        jwt=access_token,
+    )
 
 
 @pytest_asyncio.fixture(name="postgres_client", scope="session")
