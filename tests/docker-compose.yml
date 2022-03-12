@@ -33,7 +33,7 @@ services:
       volumes:
         - "../app:/src/app"
         - "./functional:/src/tests"
-        - "./pytest.ini:/src/pytest.ini"
+        - "../pyproject.toml:/src/pyproject.toml"
       depends_on:
         - redis_test
         - postgres_test
