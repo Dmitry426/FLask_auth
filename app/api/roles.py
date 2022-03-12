@@ -25,7 +25,7 @@ def roles_list():
 def create_role(body: RoleBody):
     name_exist = Role.query.filter_by(name=body.name).one_or_none()
     if name_exist:
-        msg = "Role with his name already exist"
+        msg = "Role with this name already exist"
         return ErrorBody(error=msg), HTTPStatus.CONFLICT
     role = Role(**body.dict())
     db.session.add(role)
@@ -43,7 +43,7 @@ def update_role(role_id: int, body: RoleBody):
         return ErrorBody(error=msg), HTTPStatus.NOT_FOUND
     name_exist = Role.query.filter_by(name=body.name).one_or_none()
     if name_exist:
-        msg = "Role with his name already exist"
+        msg = "Role with this name already exist"
         return ErrorBody(error=msg), HTTPStatus.CONFLICT
     role.name = body.name
     db.session.commit()
