@@ -60,6 +60,9 @@ def set_role(user_id: str, role_id: int):
         return ErrorBody(error=msg), HTTPStatus.NOT_FOUND
 
     if request.method == "PUT":
+        if role in user.roles:
+            msg = "Role already granted for this user"
+            return ErrorBody(error=msg), HTTPStatus.CONFLICT
         user.roles.append(role)
 
     elif request.method == "DELETE":
