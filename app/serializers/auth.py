@@ -1,7 +1,13 @@
 import re
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, validator
+
+
+class UserBody(BaseModel):
+    id: UUID
+    login: str
 
 
 class LoginBody(BaseModel):

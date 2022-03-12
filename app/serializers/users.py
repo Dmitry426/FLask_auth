@@ -1,14 +1,13 @@
 from typing import List, Optional
-from uuid import UUID
 
 from pydantic import BaseModel
 
+from .auth import UserBody
 from .roles import RoleBody
 
 
-class UserBody(BaseModel):
-    id: UUID
-    login: str
+class UserRolesBody(BaseModel):
+    user: UserBody
     roles: List[RoleBody]
 
 
@@ -16,7 +15,7 @@ class PaginationUsersBody(BaseModel):
     count: int
     total_pages: int
     page: int
-    results: List[UserBody]
+    results: List[UserRolesBody]
 
 
 class QueryPaginationBody(BaseModel):

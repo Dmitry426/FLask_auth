@@ -6,9 +6,13 @@ from sqlalchemy import func
 
 from app.core.alchemy import db
 from app.models.db_models import Role, User
-from app.serializers.auth import ErrorBody
+from app.serializers.auth import ErrorBody, UserBody
 from app.serializers.roles import RoleBody
-from app.serializers.users import PaginationUsersBody, QueryPaginationBody, UserBody
+from app.serializers.users import (
+    PaginationUsersBody,
+    QueryPaginationBody,
+    UserRolesBody,
+)
 from app.utils import permissions_required
 
 users = Blueprint("users", __name__)
@@ -30,9 +34,8 @@ def roles_list(query: QueryPaginationBody):
     )
 
     results = [
-        UserBody(
-            id=user.id,
-            login=user.login,
+        UserRolesBody(
+            user=UserBody(id=user.id, login=user.login),
             roles=[RoleBody(id=role.id, name=role.name) for role in user.roles],
         )
         for user in pagination.items
@@ -67,8 +70,7 @@ def set_role(user_id: str, role_id: int):
             return ErrorBody(error=msg), HTTPStatus.CONFLICT
 
     db.session.commit()
-    return UserBody(
-        id=user.id,
-        login=user.login,
+    return UserRolesBody(
+        user=UserBody(id=user.id, login=user.login),
         roles=[RoleBody(id=role.id, name=role.name) for role in user.roles],
     )

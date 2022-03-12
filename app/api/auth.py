@@ -22,6 +22,7 @@ from app.serializers.auth import (
     OkBody,
     RefreshBody,
     RegisterBody,
+    UserBody,
 )
 from app.utils import get_new_tokens
 
@@ -46,8 +47,7 @@ def registration(body: RegisterBody):
     new_user.set_password(body.password)
     db.session.add(new_user)
     db.session.commit()
-    msg = "User successfully created"
-    return OkBody(result=msg), HTTPStatus.CREATED
+    return UserBody(id=new_user.id, login=new_user.login), HTTPStatus.CREATED
 
 
 @auth.route("/change", methods=["POST"])
@@ -71,8 +71,7 @@ def change_password(body: RegisterBody):
     user.login = body.login
     user.set_password(body.password)
     db.session.commit()
-    msg = "Password and Login successfully changed"
-    return OkBody(result=msg), HTTPStatus.ACCEPTED
+    return UserBody(id=user.id, login=user.login), HTTPStatus.ACCEPTED
 
 
 @auth.route("/login", methods=["POST"])
