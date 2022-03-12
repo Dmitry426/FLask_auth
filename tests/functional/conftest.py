@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from http import HTTPStatus
 from typing import Any, Dict, Optional, Union
 
 import aioredis
@@ -106,6 +107,24 @@ async def postgres_client_fixture(settings: TestSettings):
     yield conn
     await conn.execute("DROP TABLE %s", settings.postgres_dbname)
     await conn.close()
+
+
+@pytest_asyncio.fixture(name="superadmin_token", scope="session")
+async def superadmin_token_fixture(make_request):
+    superadmin_data = {"login": "superuser", "password": "superpassword"}
+    response = await make_request(
+        method="POST",
+        url="/auth/login",
+        json=superadmin_data,
+    )
+    assert response.status == HTTPStatus.OK
+    access_token = response.body["access_token"]
+    yield access_token
+    await make_request(
+        method="POST",
+        url="/auth/logout",
+        jwt=access_token,
+    )
 
 
 async def wait_for_ping(client: Union[Redis, Connection], settings: TestSettings):
