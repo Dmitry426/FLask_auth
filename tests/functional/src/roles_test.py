@@ -2,7 +2,6 @@ import logging
 from http import HTTPStatus
 
 import pytest
-import pytest_asyncio
 
 from app.serializers.roles import RoleBody
 
@@ -10,24 +9,6 @@ logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.asyncio
 
 PATH = "/roles"
-
-
-@pytest_asyncio.fixture(name="superadmin_token", scope="session")
-async def superadmin_token_fixture(make_request):
-    superadmin_data = {"login": "superuser", "password": "superpassword"}
-    response = await make_request(
-        method="POST",
-        url="/auth/login",
-        json=superadmin_data,
-    )
-    assert response.status == HTTPStatus.OK
-    access_token = response.body["access_token"]
-    yield access_token
-    await make_request(
-        method="POST",
-        url="/auth/logout",
-        jwt=access_token,
-    )
 
 
 class TestGetRoles:
