@@ -40,13 +40,13 @@ def event_loop_fixture() -> asyncio.AbstractEventLoop:
 @pytest_asyncio.fixture(name="redis_client", scope="session")
 async def redis_client_fixture(settings: TestSettings) -> Redis:
     redis = aioredis.from_url(
-        f"redis://{settings.redis_host}:{settings.redis_port}",
+        f"redis://{settings.redis_settings.host}:{settings.redis_settings.port}",
         encoding="utf8",
         decode_responses=True,
     )
     await wait_for_ping(redis, settings)
     yield redis
-    await redis.flushall()
+    await redis.flushdb()
     await redis.close()
 
 
@@ -99,13 +99,13 @@ def make_request_fixture(http_client: ClientSession):
 @pytest_asyncio.fixture(name="postgres_client", scope="session")
 async def postgres_client_fixture(settings: TestSettings):
     conn = await asyncpg.connect(
-        user=settings.postgres_username,
-        password=settings.postgres_password,
-        host=settings.postgres_host,
-        port=settings.postgres_port,
+        user=settings.postgres_settings.username,
+        password=settings.postgres_settings.password,
+        host=settings.postgres_settings.host,
+        port=settings.postgres_settings.port,
     )
     yield conn
-    await conn.execute("DROP TABLE %s", settings.postgres_dbname)
+    await conn.execute("DROP DATABASE  %s", settings.postgres_settings.database_name)
     await conn.close()
 
 
