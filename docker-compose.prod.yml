@@ -9,9 +9,8 @@ services:
       - WORKERS=2
       - ASYNC_CORES=2000
       - PROTOCOL=http
-      - SQLALCHEMY_USERNAME:pguser
-      - SQLALCHEMY_PASSWORD:pgpassword
-      - SQLALCHEMY_DATABASE_NAME:auth_db
+    env_file:
+      - .env
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
@@ -24,7 +23,6 @@ services:
     volumes:
       - "redis-data:/data"
 
-
   postgres:
     image: postgres:14
     restart: on-failure
@@ -35,6 +33,14 @@ services:
       POSTGRES_PASSWORD: pgpassword
       POSTGRES_DB: auth_db
 
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
 
 volumes:
   redis-data:
