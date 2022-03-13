@@ -1,4 +1,3 @@
-import http
 from datetime import timedelta
 from http import HTTPStatus
 from typing import Optional
@@ -39,9 +38,9 @@ app.register_blueprint(users, url_prefix="/users")
 
 
 # noinspection PyUnusedLocal
-@app.errorhandler(403)
+@app.errorhandler(HTTPStatus.FORBIDDEN)
 def permission_denied(exc: BaseException):
-    return jsonify({"error": "You don't have permissions"}), http.HTTPStatus.FORBIDDEN
+    return jsonify({"error": "You don't have permissions"}), HTTPStatus.FORBIDDEN
 
 
 # noinspection PyUnusedLocal

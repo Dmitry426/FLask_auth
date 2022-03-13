@@ -1,5 +1,6 @@
 from datetime import timedelta
 from functools import wraps
+from http import HTTPStatus
 
 from flask import abort
 from flask_jwt_extended import (
@@ -40,7 +41,7 @@ def permissions_required(role: str):
             user_roles = get_jwt()["sub"]["roles"]
             if current_user.is_superuser or role in user_roles:
                 return fn(*args, **kwargs)
-            return abort(403)
+            return abort(HTTPStatus.FORBIDDEN)
 
         return decorator
 
