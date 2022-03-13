@@ -21,7 +21,7 @@ users = Blueprint("users", __name__)
 @users.route("/", methods=["GET"])
 @validate()
 @permissions_required("admin")
-def roles_list(query: QueryPaginationBody):
+def get_user_roles(query: QueryPaginationBody):
     if query.search:
         queryset = User.query.filter(
             func.lower(User.login).startswith(query.search.lower())
@@ -52,7 +52,7 @@ def roles_list(query: QueryPaginationBody):
 @users.route("/<user_id>/roles/<role_id>", methods=["PUT", "DELETE"])
 @validate()
 @permissions_required("admin")
-def set_role(user_id: str, role_id: int):
+def grant_or_revoke_role(user_id: str, role_id: int):
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
     if not user or not role:
