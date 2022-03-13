@@ -3,6 +3,7 @@ from http import HTTPStatus
 
 import pytest
 
+from app.core.enums import DefaultRole
 from app.serializers.roles import RoleBody
 
 logger = logging.getLogger(__name__)
@@ -30,7 +31,7 @@ class TestCreateRole:
 
     async def test_success(self, make_request, superadmin_token):
         """Test create role method with success."""
-        target_role = RoleBody(id=1, name="admin")
+        target_role = RoleBody(id=1, name=DefaultRole.admin.value)
         response = await make_request(
             method="POST",
             url=f"{PATH}/",
@@ -42,7 +43,7 @@ class TestCreateRole:
 
     async def test_already_exists(self, make_request, superadmin_token):
         """Test create role method with already exists exception."""
-        target_role = RoleBody(id=1, name="admin")
+        target_role = RoleBody(id=1, name=DefaultRole.admin.value)
         response = await make_request(
             method="POST",
             url=f"{PATH}/",
@@ -55,7 +56,7 @@ class TestCreateRole:
 class TestUpdateRole:
     """Test update role method."""
 
-    target_role = RoleBody(id=1, name="Admin")
+    target_role = RoleBody(id=1, name=DefaultRole.subscribed.value)
 
     async def test_success(self, make_request, superadmin_token):
         """Test update role method with success."""
@@ -91,8 +92,6 @@ class TestUpdateRole:
 
 class TestDeleteRole:
     """Test delete role method."""
-
-    target_role = RoleBody(id=1, name="Admin")
 
     async def test_success(self, make_request, superadmin_token):
         """Test update role method with success."""

@@ -5,6 +5,7 @@ from flask_pydantic import validate
 from sqlalchemy import func
 
 from app.core.alchemy import db
+from app.core.enums import DefaultRole
 from app.models.db_models import Role, User
 from app.serializers.auth import ErrorBody, UserBody
 from app.serializers.roles import RoleBody
@@ -20,7 +21,7 @@ users = Blueprint("users", __name__)
 
 @users.route("/", methods=["GET"])
 @validate()
-@permissions_required("admin")
+@permissions_required(DefaultRole.admin)
 def roles_list(query: QueryPaginationBody):
     if query.search:
         queryset = User.query.filter(
@@ -51,7 +52,7 @@ def roles_list(query: QueryPaginationBody):
 
 @users.route("/<user_id>/roles/<role_id>", methods=["PUT", "DELETE"])
 @validate()
-@permissions_required("admin")
+@permissions_required(DefaultRole.admin)
 def set_role(user_id: str, role_id: int):
     user = User.query.get(user_id)
     role = Role.query.get(role_id)
