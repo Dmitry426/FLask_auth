@@ -13,6 +13,7 @@ PATH = "/auth"
 
 class TestUserAuth:
     user = {"login": "Test", "password": "QWERTy90!"}
+    # noinspection SpellCheckingInspection
     change_name = {"login": "Best", "password": "QWERTysds90!"}
     tokens: Dict[str, Any] = {}
 
@@ -83,6 +84,7 @@ class TestUserAuth:
 
 class TestAuthNegative:
     user_wrong_password = {"login": "Test", "password": "1234"}
+    # noinspection SpellCheckingInspection
     user_right = {"login": "Best", "password": "QWERTysds90!"}
     user_fake = {"login": "Test", "password": "QWERTy90!"}
 
