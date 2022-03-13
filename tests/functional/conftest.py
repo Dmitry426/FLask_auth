@@ -50,6 +50,7 @@ async def redis_client_fixture(settings: TestSettings) -> Redis:
     await redis.close()
 
 
+# noinspection PyUnusedLocal
 @pytest_asyncio.fixture(name="http_client", scope="session")
 async def http_client_fixture(settings, redis_client) -> ClientSession:
     """Represents HTTP client fixture.

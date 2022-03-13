@@ -38,11 +38,13 @@ app.register_blueprint(roles, url_prefix="/roles")
 app.register_blueprint(users, url_prefix="/users")
 
 
+# noinspection PyUnusedLocal
 @app.errorhandler(403)
-def permission_denied(e):
+def permission_denied(exc: BaseException):
     return jsonify({"error": "You don't have permissions"}), http.HTTPStatus.FORBIDDEN
 
 
+# noinspection PyUnusedLocal
 @jwt.token_in_blocklist_loader
 def check_if_token_is_revoked(jwt_header, jwt_payload):
     jti = jwt_payload["jti"]
