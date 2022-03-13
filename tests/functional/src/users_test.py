@@ -84,10 +84,10 @@ class TestSetRole:
         temp_role: RoleBody,
     ):
         """Test grant roles with 404 exception."""
-        randon_id = uuid4()
+        random_id = uuid4()
         response = await make_request(
             method="PUT",
-            url=f"{PATH}/{randon_id}/roles/{temp_role.id}",
+            url=f"{PATH}/{random_id}/roles/{temp_role.id}",
             jwt=superadmin_token,
         )
         assert response.status == HTTPStatus.NOT_FOUND
@@ -151,10 +151,10 @@ class TestDeleteRole:
         temp_role: RoleBody,
     ):
         """Test grant the role for absent user."""
-        randon_id = uuid4()
+        random_id = uuid4()
         response = await make_request(
             method="DELETE",
-            url=f"{PATH}/{randon_id}/roles/{temp_role.id}",
+            url=f"{PATH}/{random_id}/roles/{temp_role.id}",
             jwt=superadmin_token,
         )
         assert response.status == HTTPStatus.NOT_FOUND
