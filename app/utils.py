@@ -1,6 +1,7 @@
 from datetime import timedelta
 from functools import wraps
 from http import HTTPStatus
+from typing import Union
 
 from flask import abort
 from flask_jwt_extended import (
@@ -17,6 +18,7 @@ from app.models.db_models import User
 from app.serializers.auth import TokenBody
 
 from .core.alchemy import db
+from .core.enums import DefaultRole
 
 
 def get_new_tokens(user: User, user_agent: str) -> TokenBody:
@@ -33,7 +35,10 @@ def get_new_tokens(user: User, user_agent: str) -> TokenBody:
     return TokenBody(access_token=access_token, refresh_token=refresh_token)
 
 
-def permissions_required(role: str):
+def permissions_required(role: Union[str, DefaultRole]):
+    if isinstance(role, DefaultRole):
+        role = role.value
+
     def wrapper(fn):
         @wraps(fn)
         def decorator(*args, **kwargs):
