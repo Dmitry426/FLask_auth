@@ -16,6 +16,7 @@ services:
       - ./.env
     volumes:
       - "./app:/src/app"
+      - "./migrations:/src/migrations"
     depends_on:
       - redis
       - postgres
