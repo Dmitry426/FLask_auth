@@ -8,18 +8,17 @@ from app.models.db_models import Role
 from app.serializers.auth import ErrorBody, OkBody
 from app.serializers.roles import RoleBody
 from app.utils import permissions_required
+from app.blueprints.urls import roles_v1
 
-roles = Blueprint("roles", __name__)
 
-
-@roles.route("/", methods=["GET"])
+@roles_v1.route("/", methods=["GET"])
 @validate(response_many=True)
 @permissions_required("admin")
 def roles_list():
     return [RoleBody(id=role.id, name=role.name) for role in Role.query.all()]
 
 
-@roles.route("/", methods=["POST"])
+@roles_v1.route("/", methods=["POST"])
 @validate()
 @permissions_required("admin")
 def create_role(body: RoleBody):
@@ -33,7 +32,7 @@ def create_role(body: RoleBody):
     return RoleBody(id=role.id, name=role.name), HTTPStatus.CREATED
 
 
-@roles.route("/<role_id>/", methods=["PATCH"])
+@roles_v1.route("/<role_id>/", methods=["PATCH"])
 @validate()
 @permissions_required("admin")
 def update_role(role_id: int, body: RoleBody):
@@ -50,7 +49,7 @@ def update_role(role_id: int, body: RoleBody):
     return RoleBody(id=role.id, name=role.name)
 
 
-@roles.route("/<role_id>/", methods=["DELETE"])
+@roles_v1.route("/<role_id>/", methods=["DELETE"])
 @validate()
 @permissions_required("admin")
 def delete_role(role_id: int):

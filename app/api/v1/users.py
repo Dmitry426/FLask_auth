@@ -1,9 +1,10 @@
 from http import HTTPStatus
 
-from flask import Blueprint, request
+from flask import request
 from flask_pydantic import validate
 from sqlalchemy import func
 
+from app.blueprints.urls import users_v1
 from app.core.alchemy import db
 from app.models.db_models import Role, User
 from app.serializers.auth import ErrorBody, UserBody
@@ -15,10 +16,8 @@ from app.serializers.users import (
 )
 from app.utils import permissions_required
 
-users = Blueprint("users", __name__)
 
-
-@users.route("/", methods=["GET"])
+@users_v1.route("/", methods=["GET"])
 @validate()
 @permissions_required("admin")
 def get_user_roles(query: QueryPaginationBody):
@@ -49,7 +48,7 @@ def get_user_roles(query: QueryPaginationBody):
     )
 
 
-@users.route("/<user_id>/roles/<role_id>", methods=["PUT", "DELETE"])
+@users_v1.route("/<user_id>/roles/<role_id>", methods=["PUT", "DELETE"])
 @validate()
 @permissions_required("admin")
 def grant_or_revoke_role(user_id: str, role_id: int):
