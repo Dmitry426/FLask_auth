@@ -20,6 +20,24 @@ services:
       - redis
       - postgres
 
+  super_user:
+    build:
+      context: ..
+      target: development
+    command: [ "flask", "create_superuser" ,"-u" ,"superuser", "-p", "superpassword"]
+    environment:
+      - SQLALCHEMY_HOST=postgres
+      - REDIS_HOST=redis
+    env_file:
+      - ../.env
+    volumes:
+      - "../app:/src/app"
+    depends_on:
+      - redis
+      - postgres
+      - app
+
+
   tests:
       build:
         context: ..
