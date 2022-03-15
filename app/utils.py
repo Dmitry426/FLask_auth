@@ -16,8 +16,6 @@ from app.core.redis import redis
 from app.models.db_models import User
 from app.serializers.auth import TokenBody
 
-from .core.alchemy import db
-
 
 def get_new_tokens(user: User, user_agent: str) -> TokenBody:
     """
@@ -46,11 +44,3 @@ def permissions_required(role: str):
         return decorator
 
     return wrapper
-
-
-def create_superuser():
-    new_user = User(login="superuser", is_superuser=True)
-    new_user.set_password("superpassword")
-
-    db.session.add(new_user)
-    db.session.commit()
