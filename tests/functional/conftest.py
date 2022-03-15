@@ -115,7 +115,7 @@ async def superadmin_token_fixture(make_request):
     superadmin_data = {"login": "superuser", "password": "superpassword"}
     response = await make_request(
         method="POST",
-        url="/auth/login",
+        url="/api/v1/auth/login",
         json=superadmin_data,
     )
     assert response.status == HTTPStatus.OK
@@ -123,7 +123,7 @@ async def superadmin_token_fixture(make_request):
     yield access_token
     await make_request(
         method="POST",
-        url="/auth/logout",
+        url="/api/v1/auth/logout",
         jwt=access_token,
     )
 
