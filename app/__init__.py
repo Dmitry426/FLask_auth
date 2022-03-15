@@ -33,7 +33,7 @@ jwt = JWTManager(app)
 app.register_blueprint(api_v1)
 
 
-# cli create superuser command
+# cli create superuser
 @app.cli.command("create_superuser")
 @click.option("--username", "-u", default="superuser", prompt="Username")
 @click.option("--password", "-p", default="superpassword", prompt="Passoword")
