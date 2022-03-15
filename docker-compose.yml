@@ -10,6 +10,7 @@ services:
       - SQLALCHEMY_USERNAME:pguser
       - SQLALCHEMY_PASSWORD:pgpassword
       - SQLALCHEMY_DATABASE_NAME:auth_db
+      - JWT_SECRET_KEY=super-secret-key
     ports:
       - "127.0.0.1:3000:3000"
     env_file:
