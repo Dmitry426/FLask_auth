@@ -1,5 +1,4 @@
 __all__ = [
-    "AppSettings",
     "RedisSettings",
     "SQLAlchemySettings",
     "FlaskSettings",
@@ -9,12 +8,6 @@ __all__ = [
 from typing import Optional
 
 from pydantic import BaseSettings, Field, SecretStr
-
-
-class AppSettings(BaseSettings):
-    """Represents application settings."""
-
-    superuser_enable: bool = Field(False, env="SUPERUSER_ENABLE")
 
 
 class SQLAlchemySettings(BaseSettings):
