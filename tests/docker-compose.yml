@@ -57,6 +57,7 @@ services:
         - redis
         - postgres
         - app
+        - super_user
 
   redis:
     image: redis:6-alpine
