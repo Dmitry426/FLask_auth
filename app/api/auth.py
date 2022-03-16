@@ -91,11 +91,16 @@ def login(body: LoginBody):
 @validate(response_many=True)
 @jwt_required()
 def auth_history():
+    page = request.args.get("page", default=1, type=int)
+    page_size = request.args.get("page_size", default=10, type=int)
     user_uuid = get_current_user().id
-    history = Session.query.filter_by(user_id=user_uuid).all()
+    history = Session.query.filter_by(user_id=user_uuid).paginate(
+        page, per_page=page_size
+    )
+
     return [
         HistoryBody(user_agent=row.user_agent, auth_date=row.auth_date)
-        for row in history
+        for row in history.items
     ]
 
 

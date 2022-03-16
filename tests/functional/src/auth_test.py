@@ -50,7 +50,9 @@ class TestUserAuth:
         logger.info("Response status : %s", response.status)
 
     async def test_history(self, make_request):
+        params = {"page": 1, "page_size": 1}
         response = await make_request(
+            params=params,
             method="GET",
             url=f"{PATH}/history",
             jwt=self.tokens["access_token"],
