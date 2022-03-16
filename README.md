@@ -31,6 +31,18 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ## Разработка
 
+Команда для создания или апдейта базы:
+
+```bash
+docker-compose exec app flask db upgrade
+```
+
+Команда для создания новой миграции:
+
+```bash
+docker-compose exec app flask db migrate -m "<migrate_name>"
+```
+
 Регистрация проверяет пароль на валидность (минимум 8 символов, одна большая, одна маленькая буква,
 одна цифра и один спец знак) {"login":"test","password":"Test1990!"}
 

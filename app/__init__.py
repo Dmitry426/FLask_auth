@@ -7,6 +7,7 @@ from flask import Flask
 from flask.json import jsonify
 from flask.logging import create_logger
 from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 
 from .api.auth import auth
@@ -22,6 +23,10 @@ from .utils import create_superuser
 app = Flask(__name__)
 swagger = Swagger(app)
 logger = create_logger(app)
+
+# Setup db and migrations
+init_alchemy(app)
+migrate = Migrate(app, db)
 
 # Setup the Flask-JWT-Extended extension
 jwt_conf = JWTSettings()
@@ -87,8 +92,6 @@ def health_handler():
 @app.before_first_request
 def on_startup():
     """Prepare application and services."""
-    init_alchemy(app)
-    db.create_all()
 
     app_settings = AppSettings()
     if app_settings.superuser_enable:
