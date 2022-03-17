@@ -10,7 +10,6 @@ from flask.json import jsonify
 from flask.logging import create_logger
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
-from sqlalchemy.exc import IntegrityError
 
 from .api import api_v1
 from .core.alchemy import db, init_alchemy
