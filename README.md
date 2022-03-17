@@ -43,6 +43,12 @@ docker-compose exec app flask db upgrade
 docker-compose exec app flask db migrate -m "<migrate_name>"
 ```
 
+Команда для создания суперюзера:
+
+```bash
+docker-compose exec app flask create_superuser -u <"username"> -p <"Password">
+```
+
 Регистрация проверяет пароль на валидность (минимум 8 символов, одна большая, одна маленькая буква,
 одна цифра и один спец знак) {"login":"test","password":"Test1990!"}
 

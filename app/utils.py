@@ -16,8 +16,6 @@ from app.core.config import JWTSettings
 from app.core.redis import redis
 from app.models.db_models import User
 from app.serializers.auth import TokenBody
-
-from .core.alchemy import db
 from .core.enums import DefaultRole
 
 
@@ -51,11 +49,3 @@ def permissions_required(role: Union[str, DefaultRole]):
         return decorator
 
     return wrapper
-
-
-def create_superuser():
-    new_user = User(login="superuser", is_superuser=True)
-    new_user.set_password("superpassword")
-
-    db.session.add(new_user)
-    db.session.commit()

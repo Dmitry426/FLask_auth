@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 pytestmark = pytest.mark.asyncio
 
-PATH = "/auth"
+PATH = "/api/v1/auth"
 
 
 class TestUserAuth:

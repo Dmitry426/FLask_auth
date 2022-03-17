@@ -12,7 +12,7 @@ from app.serializers.users import UserRolesBody
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.asyncio
 
-PATH = "/users"
+PATH = "/api/v1/users"
 
 
 @pytest_asyncio.fixture(name="temp_role", scope="session")
@@ -20,7 +20,7 @@ async def temp_role_fixture(make_request, superadmin_token):
     target_role = RoleBody(name="temp_role")
     response = await make_request(
         method="POST",
-        url="/roles/",
+        url="/api/v1/roles/",
         json=target_role.dict(),
         jwt=superadmin_token,
     )
@@ -34,7 +34,7 @@ async def temp_user_fixture(make_request):
     target_user = {"login": "role_tester", "password": "SuperStr0ng!"}
     response = await make_request(
         method="POST",
-        url="/auth/registration",
+        url="/api/v1/auth/registration",
         json=target_user,
     )
     user = UserBody(**response.body)

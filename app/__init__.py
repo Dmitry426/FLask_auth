@@ -2,23 +2,22 @@ from datetime import timedelta
 from http import HTTPStatus
 from typing import Optional
 
+import click
 from flasgger import Swagger
 from flask import Flask
+from flask.cli import with_appcontext
 from flask.json import jsonify
 from flask.logging import create_logger
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 
-from .api.auth import auth
-from .api.roles import roles
-from .api.users import users
+from .api import api_v1
 from .core.alchemy import db, init_alchemy
-from .core.config import AppSettings, JWTSettings
+from .core.config import JWTSettings
 from .core.redis import redis
 from .models.db_models import User
 from .serializers.auth import ErrorBody
-from .utils import create_superuser
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -37,9 +36,23 @@ app.config["JWT_ERROR_MESSAGE_KEY"] = "error"
 jwt = JWTManager(app)
 
 # Setup routing
-app.register_blueprint(auth, url_prefix="/auth")
-app.register_blueprint(roles, url_prefix="/roles")
-app.register_blueprint(users, url_prefix="/users")
+app.register_blueprint(api_v1)
+
+
+# cli create superuser
+@app.cli.command("create_superuser")
+@click.option("--username", "-u", default="superuser", prompt="Username")
+@click.option("--password", "-p", default="superpassword", prompt="Passoword")
+@with_appcontext
+def create_superuser(username: str, password: str):
+    init_alchemy(app)
+    db.create_all()
+
+    new_user = User(login=username, is_superuser=True)
+    new_user.set_password(password)
+
+    db.session.add(new_user)
+    db.session.commit()
 
 
 # noinspection PyUnusedLocal
@@ -92,13 +105,6 @@ def health_handler():
 @app.before_first_request
 def on_startup():
     """Prepare application and services."""
-
-    app_settings = AppSettings()
-    if app_settings.superuser_enable:
-        try:
-            create_superuser()
-        except IntegrityError:
-            pass
 
 
 @app.teardown_request

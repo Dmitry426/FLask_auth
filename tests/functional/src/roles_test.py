@@ -9,7 +9,7 @@ from app.serializers.roles import RoleBody
 logger = logging.getLogger(__name__)
 pytestmark = pytest.mark.asyncio
 
-PATH = "/roles"
+PATH = "/api/v1/roles"
 
 
 class TestGetRoles:

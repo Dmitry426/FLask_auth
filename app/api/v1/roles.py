@@ -10,7 +10,7 @@ from app.serializers.auth import ErrorBody, OkBody
 from app.serializers.roles import RoleBody
 from app.utils import permissions_required
 
-roles = Blueprint("roles", __name__)
+roles = Blueprint("roles", __name__, url_prefix="/roles")
 
 
 @roles.route("/", methods=["GET"])

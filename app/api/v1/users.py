@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from flask import Blueprint, request
+from flask import request, Blueprint
 from flask_pydantic import validate
 from sqlalchemy import func
 
@@ -16,7 +16,7 @@ from app.serializers.users import (
 )
 from app.utils import permissions_required
 
-users = Blueprint("users", __name__)
+users = Blueprint("users", __name__, url_prefix="/users")
 
 
 @users.route("/", methods=["GET"])

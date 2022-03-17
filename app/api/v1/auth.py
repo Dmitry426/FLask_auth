@@ -26,7 +26,7 @@ from app.serializers.auth import (
 )
 from app.utils import get_new_tokens
 
-auth = Blueprint("auth", __name__)
+auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 
 @auth.route("/registration", methods=["POST"])
