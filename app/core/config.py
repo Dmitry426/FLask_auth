@@ -3,6 +3,7 @@ __all__ = [
     "SQLAlchemySettings",
     "FlaskSettings",
     "JWTSettings",
+    "TracingSettings",
 ]
 
 from typing import Optional
@@ -43,3 +44,16 @@ class JWTSettings(BaseSettings):
     secret: Optional[str] = Field(None, env="JWT_SECRET_KEY")
     access_exp: int = Field(60, env="JWT_ACCESS_TOKEN_EXPIRES")
     refresh_exp: int = Field(7, env="JWT_REFRESH_TOKEN_EXPIRES")
+
+
+class TracingSettings(BaseSettings):
+    """Represents tracing settings."""
+
+    class Config:
+        env_prefix = "TRACING_"
+
+    enabled: bool = False
+    service_name: str = "auth"
+    environment: str = "dev"
+    agent_host_name: str = "127.0.0.1"
+    agent_port: int = 6831
