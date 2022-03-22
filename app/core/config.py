@@ -32,10 +32,13 @@ class RedisSettings(BaseSettings):
 class FlaskSettings(BaseSettings):
     """Represents Flask settings."""
 
-    host: str = Field("0.0.0.0", env="FLASK_HOST")
-    port: int = Field(3000, env="PORT_APP")
-    debug: bool = Field(True, env="FLASK_DEBUG")
-    redirect_uri: str = Field("localhost", env="REDIRECT_URI")
+    class Config:
+        env_prefix = "flask_"
+
+    host: str = "0.0.0.0"
+    port: int = 3000
+    debug: bool = True
+    redirect_uri: str = "localhost"
 
 
 class JWTSettings(BaseSettings):

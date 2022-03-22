@@ -1,8 +1,8 @@
-import random
 import string
 from datetime import timedelta
 from functools import wraps
 from http import HTTPStatus
+from secrets import choice as secrets_choice
 from typing import Union
 
 from flask import abort
@@ -60,10 +60,6 @@ def generate_password():
     num = string.digits
     symbols = string.punctuation
 
-    all = lower + upper + num + symbols
+    password = lower + upper + num + symbols
 
-    temp = random.sample(all, 12)
-
-    password = "".join(temp)
-
-    return password
+    return "".join(secrets_choice(password) for _ in range(16))
