@@ -19,6 +19,7 @@ Flask-Pydantic = "~0.9"
 Flask-JWT-Extended = "~4.3"
 backoff = "^1.11.1"
 Flask-Migrate = "^3.1.0"
+Flask-Limiter = { version = "^2.2.0", extras = ["redis"] }
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }
