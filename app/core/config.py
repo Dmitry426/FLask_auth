@@ -3,10 +3,12 @@ __all__ = [
     "SQLAlchemySettings",
     "FlaskSettings",
     "JWTSettings",
+    "RateLimitSettings",
     "TracingSettings",
 ]
 
-from typing import Optional
+from enum import Enum
+from typing import List, Optional
 
 from pydantic import BaseSettings, Field, SecretStr
 
@@ -77,3 +79,22 @@ class TracingSettings(BaseSettings):
     environment: str = "dev"
     agent_host_name: str = "127.0.0.1"
     agent_port: int = 6831
+
+
+class RateLimitSettings(BaseSettings):
+    """Represents rate limit settings."""
+
+    class Config:
+        env_prefix = "RATELIMIT_"
+
+    class Strategy(str, Enum):
+        fixed_window = "fixed-window"
+        fixed_window_elastic_expiry = "fixed-window-elastic-expiry"
+        moving_window = "moving-window"
+
+    enabled: bool = False
+    storage_uri: Optional[str] = "redis://localhost:6379/0"
+    strategy: Strategy = Strategy.moving_window
+    default: List[str] = []
+    default_limits_per_method: bool = True
+    key_prefix: Optional[str]
