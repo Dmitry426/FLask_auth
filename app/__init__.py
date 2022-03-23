@@ -15,6 +15,7 @@ from .api import api_v1
 from .core.alchemy import db, init_alchemy
 from .core.config import JWTSettings
 from .core.redis import redis
+from .core import tracing
 from .models.db_models import User
 from .serializers.auth import ErrorBody
 
@@ -104,6 +105,7 @@ def health_handler():
 @app.before_first_request
 def on_startup():
     """Prepare application and services."""
+    tracing.setup(app)
 
 
 @app.teardown_request

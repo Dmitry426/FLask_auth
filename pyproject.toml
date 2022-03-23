@@ -22,6 +22,10 @@ Flask-Migrate = "^3.1.0"
 Authlib = "^0.15.5"
 requests = "^2.27.1"
 transliterate = "^1.10.2"
+opentelemetry-api = "^1.10.0"
+opentelemetry-sdk = "^1.10.0"
+opentelemetry-exporter-jaeger = "^1.10.0"
+opentelemetry-instrumentation-flask = "^0.29b1"
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }

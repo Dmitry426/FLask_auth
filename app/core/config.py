@@ -3,6 +3,7 @@ __all__ = [
     "SQLAlchemySettings",
     "FlaskSettings",
     "JWTSettings",
+    "TracingSettings",
 ]
 
 from typing import Optional
@@ -63,3 +64,16 @@ class OAuthSettings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         env_nested_delimiter = "__"
+
+
+class TracingSettings(BaseSettings):
+    """Represents tracing settings."""
+
+    class Config:
+        env_prefix = "TRACING_"
+
+    enabled: bool = False
+    service_name: str = "auth"
+    environment: str = "dev"
+    agent_host_name: str = "127.0.0.1"
+    agent_port: int = 6831

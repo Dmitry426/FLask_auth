@@ -15,13 +15,16 @@ from flask_jwt_extended import (
 )
 
 from app.core.config import JWTSettings
+from app.core.enums import DefaultRole
 from app.core.redis import redis
+from app.core.tracing import tracer
 from app.models.db_models import User
 from app.serializers.auth import TokenBody
 
 from .core.enums import DefaultRole
 
 
+@tracer("get_new_tokens", __name__)
 def get_new_tokens(user: User, user_agent: str) -> TokenBody:
     """
     Create new access and refresh tokens with user id and roles
@@ -36,6 +39,7 @@ def get_new_tokens(user: User, user_agent: str) -> TokenBody:
     return TokenBody(access_token=access_token, refresh_token=refresh_token)
 
 
+@tracer("check_permissions", __name__)
 def permissions_required(role: Union[str, DefaultRole]):
     if isinstance(role, DefaultRole):
         role = role.value
@@ -60,9 +64,9 @@ def generate_password():
     num = string.digits
     symbols = string.punctuation
 
-    all = lower + upper + num + symbols
+    all_ = lower + upper + num + symbols
 
-    temp = random.sample(all, 12)
+    temp = random.sample(all_, 12)
 
     password = "".join(temp)
 
