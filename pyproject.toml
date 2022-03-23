@@ -19,6 +19,9 @@ Flask-Pydantic = "~0.9"
 Flask-JWT-Extended = "~4.3"
 backoff = "^1.11.1"
 Flask-Migrate = "^3.1.0"
+Authlib = "^0.15.5"
+requests = "^2.27.1"
+transliterate = "^1.10.2"
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }

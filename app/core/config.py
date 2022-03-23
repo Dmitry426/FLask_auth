@@ -35,6 +35,7 @@ class FlaskSettings(BaseSettings):
     host: str = Field("0.0.0.0", env="FLASK_HOST")
     port: int = Field(3000, env="PORT_APP")
     debug: bool = Field(True, env="FLASK_DEBUG")
+    redirect_uri: str = Field("localhost", env="REDIRECT_URI")
 
 
 class JWTSettings(BaseSettings):
@@ -43,3 +44,22 @@ class JWTSettings(BaseSettings):
     secret: Optional[str] = Field(None, env="JWT_SECRET_KEY")
     access_exp: int = Field(60, env="JWT_ACCESS_TOKEN_EXPIRES")
     refresh_exp: int = Field(7, env="JWT_REFRESH_TOKEN_EXPIRES")
+
+
+class OAuthServiceSettings(BaseSettings):
+    client_id: str
+    client_secret: str
+
+
+class OAuthSettings(BaseSettings):
+    """Represents OAuth settings."""
+
+    google: OAuthServiceSettings
+    vkontakte: OAuthServiceSettings
+    mail: OAuthServiceSettings
+    yandex: OAuthServiceSettings
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        env_nested_delimiter = "__"

@@ -1,3 +1,5 @@
+import random
+import string
 from datetime import timedelta
 from functools import wraps
 from http import HTTPStatus
@@ -16,6 +18,7 @@ from app.core.config import JWTSettings
 from app.core.redis import redis
 from app.models.db_models import User
 from app.serializers.auth import TokenBody
+
 from .core.enums import DefaultRole
 
 
@@ -49,3 +52,18 @@ def permissions_required(role: Union[str, DefaultRole]):
         return decorator
 
     return wrapper
+
+
+def generate_password():
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    num = string.digits
+    symbols = string.punctuation
+
+    all = lower + upper + num + symbols
+
+    temp = random.sample(all, 12)
+
+    password = "".join(temp)
+
+    return password
