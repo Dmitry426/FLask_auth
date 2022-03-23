@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -52,18 +53,28 @@ class Role(db.Model):
 
 class Session(db.Model):
     __tablename__ = "sessions"
+    __table_args__ = (
+        UniqueConstraint("id", "auth_date"),
+        {
+            "postgresql_partition_by": "Range (auth_date)",
+        },
+    )
 
     id = db.Column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
-        unique=True,
         nullable=False,
     )
     user_id = db.Column(UUID(as_uuid=True), db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("User", backref=db.backref("sessions", lazy=True))
     user_agent = db.Column(db.String)
-    auth_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    auth_date = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow,
+        primary_key=True,
+    )
 
     def __repr__(self):
         return f"<Session User {self.user.login}>"
