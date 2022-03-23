@@ -43,6 +43,14 @@ services:
       POSTGRES_PASSWORD: pgpassword
       POSTGRES_DB: auth_db
 
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
 
 volumes:
   redis-data:
