@@ -3,9 +3,12 @@ __all__ = [
     "SQLAlchemySettings",
     "FlaskSettings",
     "JWTSettings",
+    "RateLimitSettings",
+    "TracingSettings",
 ]
 
-from typing import Optional
+from enum import Enum
+from typing import List, Optional
 
 from pydantic import BaseSettings, Field, SecretStr
 
@@ -35,6 +38,7 @@ class FlaskSettings(BaseSettings):
     host: str = Field("0.0.0.0", env="FLASK_HOST")
     port: int = Field(3000, env="PORT_APP")
     debug: bool = Field(True, env="FLASK_DEBUG")
+    redirect_uri: str = Field("localhost", env="REDIRECT_URI")
 
 
 class JWTSettings(BaseSettings):
@@ -43,3 +47,54 @@ class JWTSettings(BaseSettings):
     secret: Optional[str] = Field(None, env="JWT_SECRET_KEY")
     access_exp: int = Field(60, env="JWT_ACCESS_TOKEN_EXPIRES")
     refresh_exp: int = Field(7, env="JWT_REFRESH_TOKEN_EXPIRES")
+
+
+class OAuthServiceSettings(BaseSettings):
+    client_id: str
+    client_secret: str
+
+
+class OAuthSettings(BaseSettings):
+    """Represents OAuth settings."""
+
+    google: OAuthServiceSettings
+    vkontakte: OAuthServiceSettings
+    mail: OAuthServiceSettings
+    yandex: OAuthServiceSettings
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = "utf-8"
+        env_nested_delimiter = "__"
+
+
+class TracingSettings(BaseSettings):
+    """Represents tracing settings."""
+
+    class Config:
+        env_prefix = "TRACING_"
+
+    enabled: bool = False
+    service_name: str = "auth"
+    environment: str = "dev"
+    agent_host_name: str = "127.0.0.1"
+    agent_port: int = 6831
+
+
+class RateLimitSettings(BaseSettings):
+    """Represents rate limit settings."""
+
+    class Config:
+        env_prefix = "RATELIMIT_"
+
+    class Strategy(str, Enum):
+        fixed_window = "fixed-window"
+        fixed_window_elastic_expiry = "fixed-window-elastic-expiry"
+        moving_window = "moving-window"
+
+    enabled: bool = False
+    storage_uri: Optional[str] = "redis://localhost:6379/0"
+    strategy: Strategy = Strategy.moving_window
+    default: List[str] = []
+    default_limits_per_method: bool = True
+    key_prefix: Optional[str]

@@ -11,6 +11,8 @@ services:
       - SQLALCHEMY_PASSWORD:pgpassword
       - SQLALCHEMY_DATABASE_NAME:auth_db
       - JWT_SECRET_KEY=super-secret-key
+      - TRACING_ENABLED=true
+      - TRACING_AGENT_HOST_NAME=jaeger
     ports:
       - "127.0.0.1:3000:3000"
     env_file:
@@ -21,6 +23,7 @@ services:
     depends_on:
       - redis
       - postgres
+      - jaeger
 
   redis:
     image: redis:6-alpine
@@ -43,6 +46,24 @@ services:
       POSTGRES_PASSWORD: pgpassword
       POSTGRES_DB: auth_db
 
+  jaeger:
+    image: jaegertracing/all-in-one:1.32
+    ports:
+      - "6831:6831/udp"
+      - "5778:5778"
+      - "16686:16686"
+      - "14250:14250"
+      - "14268:14268"
+      - "14269:14269"
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - app
 
 volumes:
   redis-data:

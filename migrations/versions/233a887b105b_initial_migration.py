@@ -45,8 +45,30 @@ def upgrade():
             ["user_id"],
             ["users.id"],
         ),
-        sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("id"),
+        sa.PrimaryKeyConstraint("id", "auth_date"),
+        sa.UniqueConstraint("id", "auth_date"),
+        postgresql_partition_by="RANGE (auth_date)",
+    )
+    op.execute(
+        """
+        CREATE TABLE IF NOT EXISTS sessions_y2022m03
+        PARTITION OF sessions
+        FOR VALUES FROM ('2022-03-01') TO ('2022-03-31');
+        """
+    )
+    op.execute(
+        """
+        CREATE TABLE IF NOT EXISTS sessions_y2022m04
+        PARTITION OF sessions
+        FOR VALUES FROM ('2022-04-01') TO ('2022-04-30');
+        """
+    )
+    op.execute(
+        """
+        CREATE TABLE IF NOT EXISTS sessions_y2022m05
+        PARTITION OF sessions
+        FOR VALUES FROM ('2022-05-01') TO ('2022-05-31');
+        """
     )
     op.create_table(
         "users_roles",
