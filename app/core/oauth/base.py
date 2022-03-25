@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 from authlib.integrations.requests_client import OAuth2Session
 from flask import Response, redirect, url_for
@@ -9,7 +9,7 @@ from ..config import OAuthServiceSettings
 
 
 class OAuthSignIn(ABC):
-    providers = None
+    providers: Dict["str", "OAuthSignIn"] = {}
 
     @abstractmethod
     @property
@@ -43,6 +43,6 @@ class OAuthSignIn(ABC):
 
     @classmethod
     def get_provider(cls, provider_name: str) -> "OAuthSignIn":
-        if cls.providers is None:
-            cls.providers = {cl.provider_name: cl for cl in cls.__subclasses__()}
+        if not cls.providers:
+            cls.providers = {cl.provider_name: cl() for cl in cls.__subclasses__()}
         return cls.providers[provider_name]
