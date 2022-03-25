@@ -2,6 +2,13 @@
 
 Ссылка на репозиторий: https://github.com/Olegt0rr/Auth_sprint_1
 
+
+# Async_api jwt 
+
+Ссылка на репозиторий: https://github.com/Dmitry426/Async_API_assigment_1.git
+
+
+
 ## Запуск приложения
 
 ### Development
