@@ -5,6 +5,7 @@ __all__ = [
     "JWTSettings",
     "RateLimitSettings",
     "TracingSettings",
+    "OAuthServiceSettings",
 ]
 
 from enum import Enum
@@ -51,7 +52,10 @@ class JWTSettings(BaseSettings):
 
 class OAuthServiceSettings(BaseSettings):
     client_id: str
-    client_secret: str
+    client_secret: SecretStr
+    authorize_url: str
+    access_token_url: str
+    info_url: str
 
 
 class OAuthSettings(BaseSettings):

@@ -18,3 +18,10 @@ class DefaultRole(AutoName):
     subscribed = auto()
     admin = auto()
     superadmin = auto()
+
+
+class Provider(AutoName):
+    google = auto()
+    mail = auto()
+    vkontakte = auto()
+    yandex = auto()
