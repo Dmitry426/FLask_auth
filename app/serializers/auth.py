@@ -8,14 +8,17 @@ from pydantic import BaseModel, validator
 class UserBody(BaseModel):
     id: UUID
     login: str
+    email: str
 
 
 class LoginBody(BaseModel):
-    login: str
+    email: str
     password: str
 
 
 class RegisterBody(LoginBody):
+    login: str
+
     @validator("password")
     def password_validate(cls, value):
         if not re.match(
