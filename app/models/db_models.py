@@ -27,6 +27,7 @@ class User(db.Model):
     )
     login = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
     is_superuser = db.Column(db.Boolean, unique=False, default=False)
     roles = db.relationship("Role", secondary=users_roles, back_populates="users")
 
