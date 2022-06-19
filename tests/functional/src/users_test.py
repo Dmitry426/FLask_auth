@@ -31,7 +31,8 @@ async def temp_role_fixture(make_request, superadmin_token):
 
 @pytest_asyncio.fixture(name="temp_user", scope="session")
 async def temp_user_fixture(make_request):
-    target_user = {"login": "role_tester", "password": "SuperStr0ng!"}
+    target_user = {"login": "role_tester", "email": "change@gmail.com",
+                   "password": "SuperStr0ng!"}
     response = await make_request(
         method="POST",
         url="/api/v1/auth/registration",
