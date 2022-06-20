@@ -44,12 +44,13 @@ app.register_blueprint(api_v1)
 @app.cli.command("create_superuser")
 @click.option("--username", "-u", default="superuser", prompt="Username")
 @click.option("--password", "-p", default="superpassword", prompt="Passoword")
+@click.option("--email", "-m", default="default@gmail.com", prompt="email")
 @with_appcontext
-def create_superuser(username: str, password: str):
+def create_superuser(username: str, password: str, email: str):
     init_alchemy(app)
     db.create_all()
 
-    new_user = User(login=username, is_superuser=True)
+    new_user = User(login=username, email=email, is_superuser=True)
     new_user.set_password(password)
 
     db.session.add(new_user)

@@ -66,7 +66,7 @@ def add_service(provider: str):
 def oauth_callback(provider: str):
     """
     Endpoint for redirect_uri from services
-    Can authorization, registration user and attach service to user
+    Provides authorization, user registration and service attachment to user
     """
     user = None
     generated_password = None
@@ -94,7 +94,7 @@ def oauth_callback(provider: str):
 
     # Registration logic
     elif not user and not social_account:
-        user = User(login=email)
+        user = User(login=email ,  email=email)
         generated_password = generate_password()
         user.set_password(generated_password)
         db.session.add(user)

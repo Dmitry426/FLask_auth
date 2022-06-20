@@ -90,7 +90,7 @@ def make_request_fixture(http_client: ClientSession):
 
             return HTTPResponse(
                 body=body,
-                headers=dict(response.headers),
+                headers=response.headers,
                 status=response.status,
             )
 
@@ -112,7 +112,8 @@ async def postgres_client_fixture(settings: TestSettings):
 
 @pytest_asyncio.fixture(name="superadmin_token", scope="session")
 async def superadmin_token_fixture(make_request):
-    superadmin_data = {"login": "superuser", "password": "superpassword"}
+    superadmin_data = {"login": "superuser", "email":"genric@gmail.com",
+                       "password": "superpassword"}
     response = await make_request(
         method="POST",
         url="/api/v1/auth/login",

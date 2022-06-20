@@ -1,5 +1,5 @@
-from . import app
-from .core.config import FlaskSettings
+from app import app
+from app.core.config import FlaskSettings
 
 settings = FlaskSettings()
 app.run(
