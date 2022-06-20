@@ -78,7 +78,7 @@ def change_password(body: RegisterBody):
 @auth.route("/login", methods=["POST"])
 @validate()
 def login(body: LoginBody):
-    user = User.query.filter_by(login=body.email).one_or_none()
+    user = User.query.filter_by(email=body.email).one_or_none()
     if not user or not user.check_password(body.password):
         msg = "User with this credentials does not exist"
         return ErrorBody(error=msg), HTTPStatus.CONFLICT

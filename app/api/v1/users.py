@@ -25,10 +25,10 @@ users = Blueprint("users", __name__, url_prefix="/users")
 def get_user_roles(query: QueryPaginationBody):
     if query.search:
         queryset = User.query.filter(
-            func.lower(User.login).startswith(query.search.lower())
-        ).order_by(User.login)
+            func.lower(User.email).startswith(query.search.lower())
+        ).order_by(User.email)
     else:
-        queryset = User.query.order_by(User.login)
+        queryset = User.query.order_by(User.email)
 
     pagination = queryset.paginate(
         page=query.page, per_page=query.per_page, error_out=False
@@ -36,7 +36,7 @@ def get_user_roles(query: QueryPaginationBody):
 
     results = [
         UserRolesBody(
-            user=UserBody(id=user.id, login=user.login),
+            user=UserBody(id=user.id, login=user.login, email=user.email),
             roles=[RoleBody(id=role.id, name=role.name) for role in user.roles],
         )
         for user in pagination.items
@@ -75,6 +75,6 @@ def grant_or_revoke_role(user_id: str, role_id: int):
 
     db.session.commit()
     return UserRolesBody(
-        user=UserBody(id=user.id, login=user.login),
+        user=UserBody(id=user.id, login=user.login, email=user.email),
         roles=[RoleBody(id=role.id, name=role.name) for role in user.roles],
     )

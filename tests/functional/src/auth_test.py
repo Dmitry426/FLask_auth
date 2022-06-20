@@ -14,7 +14,7 @@ PATH = "/api/v1/auth"
 class TestUserAuth:
     user = {"login": "Test", "email": "best@email", "password": "QWERTy90!"}
     # noinspection SpellCheckingInspection
-    change_name = {"login": "Best", "email": "best@email", "password": "QWERTysds90!"}
+    change_name = {"login": "Best", "email": "new@email", "password": "QWERTysds90!"}
     tokens: Dict[str, Any] = {}
 
     async def test_create_user(self, make_request):
@@ -87,8 +87,8 @@ class TestUserAuth:
 class TestAuthNegative:
     user_wrong_password = {"login": "Test", "email": "best@email", "password": "1234"}
     # noinspection SpellCheckingInspection
-    user_right = {"login": "Best", "email": "best@email", "password": "QWERTysds90!"}
-    user_fake = {"login": "Test", "email": "best@email", "password": "QWERTy90!"}
+    user_right = {"login": "Best", "email": "new@email", "password": "QWERTysds90!"}
+    user_fake = {"login": "Best", "email": "fake@email", "password": "QWERTysds90!"}
 
     async def test_create_user_short_password(self, make_request):
         response = await make_request(
