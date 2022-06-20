@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod, ABCMeta
 from typing import Dict, Optional, Tuple
 
 from authlib.integrations.requests_client import OAuth2Session
@@ -8,11 +8,10 @@ from .. import config
 from ..config import OAuthServiceSettings
 
 
-class OAuthSignIn(ABC):
-    providers: Dict["str", "OAuthSignIn"] = {}
+class OAuthSignIn(metaclass=ABCMeta):
+    providers = None
 
     @abstractmethod
-    @property
     def provider_name(self) -> str:
         pass
 
