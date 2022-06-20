@@ -25,9 +25,9 @@ class User(db.Model):
         unique=True,
         nullable=False,
     )
-    login = db.Column(db.String, unique=True, nullable=False)
+    login = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    email = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False, unique=True,)
     is_superuser = db.Column(db.Boolean, unique=False, default=False)
     roles = db.relationship("Role", secondary=users_roles, back_populates="users")
 
@@ -55,10 +55,7 @@ class Role(db.Model):
 class Session(db.Model):
     __tablename__ = "sessions"
     __table_args__ = (
-        UniqueConstraint("id", "auth_date"),
-        {
-            "postgresql_partition_by": "Range (auth_date)",
-        },
+        UniqueConstraint("id", "auth_date", name="session_date"),
     )
 
     id = db.Column(
