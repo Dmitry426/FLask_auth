@@ -8,6 +8,15 @@ services:
       target: development
     ports:
       - "127.0.0.1:3000:3000"
+    command: >
+      sh -c "flask db upgrade &&
+             flask create_superuser -u superuser -p superpassword -m genric@gmail.com &&
+             python -m app"
+    healthcheck:
+      test: [ "CMD" ,"nc", "-vz", "-w1", "localhost", "3000" ]
+      interval: 5s
+      timeout: 30s
+      retries: 10
     environment:
       - PORT_APP=3000
       - SQLALCHEMY_HOST=postgres
@@ -18,25 +27,10 @@ services:
       - "../app:/src/app"
       - "../migrations:/src/migrations"
     depends_on:
-      - redis
-      - postgres
-
-  super_user:
-    build:
-      context: ..
-      target: development
-    command: [ "flask", "create_superuser" ,"-u" ,"superuser", "-p", "superpassword","-m","genric@gmail.com"]
-    environment:
-      - SQLALCHEMY_HOST=postgres
-      - REDIS_HOST=redis
-    env_file:
-      - ../.env
-    volumes:
-      - "../app:/src/app"
-    depends_on:
-      - redis
-      - postgres
-      - app
+      postgres:
+        condition: service_healthy
+      redis:
+          condition: service_healthy
 
 
   tests:
@@ -55,16 +49,21 @@ services:
         - "./functional:/src/tests"
         - "../pyproject.toml:/src/pyproject.toml"
       depends_on:
-        - redis
-        - postgres
-        - app
-        - super_user
+        app:
+          condition: service_healthy
+
 
   redis:
     image: redis:6-alpine
     restart: on-failure
     ports:
       - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
 
   postgres:
     image: postgres:14
@@ -75,3 +74,8 @@ services:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpassword
       POSTGRES_DB: auth_db
+    healthcheck:
+      test: pg_isready -U pguser -d auth_db
+      interval: 5s
+      timeout: 20s
+      retries: 5

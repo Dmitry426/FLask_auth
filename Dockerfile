@@ -59,13 +59,16 @@ COPY --from=builder-base $POETRY_HOME $POETRY_HOME
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 
 # quicker install as runtime deps are already installed
-RUN poetry install
+
+RUN  poetry install
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y netcat
 
 # WARNING! Don't forget to mount "./app:/src/app"
 WORKDIR /src
 
 EXPOSE $PORT_APP
-CMD python -m app
+
 
 
 # `production` image used for runtime
