@@ -18,8 +18,6 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
-      jaeger:
-        condition: service_started
 
   redis:
     image: redis:6-alpine
