@@ -13,6 +13,7 @@ on:
       - app/**
   workflow_dispatch:
 
+
 env:
   SRC_PATH: app/
   DEPLOY_PATH: app/
