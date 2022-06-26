@@ -48,7 +48,7 @@ jobs:
     - name: Check typing with mypy
       run: |
         mypy --html-report reports/app/mypy/ ./app || true
-]
+
     - name: Upload reports
       uses: actions/upload-artifact@v3
       with:
