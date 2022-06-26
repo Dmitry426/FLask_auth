@@ -1,3 +1,4 @@
+import logging
 from datetime import timedelta
 from http import HTTPStatus
 from typing import Optional
@@ -7,22 +8,25 @@ from flasgger import Swagger
 from flask import Flask
 from flask.cli import with_appcontext
 from flask.json import jsonify
-from flask.logging import create_logger
+
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 
 from .api import api_v1
 from .core.alchemy import db, init_alchemy
 from .core.config import JWTSettings
+from .core.logger import LOGGING
 from .core.redis import redis
 from .core import tracing
 from .core import limiter
 from .models.db_models import User
 from .serializers.auth import ErrorBody
+from logging import config as logging_config
 
 app = Flask(__name__)
 swagger = Swagger(app)
-logger = create_logger(app)
+logging_config.dictConfig(LOGGING)
+logger = logging.getLogger("auth_api")
 
 # Setup db and migrations
 init_alchemy(app)

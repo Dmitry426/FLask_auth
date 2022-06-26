@@ -1,8 +1,10 @@
 __all__ = ["redis"]
 
+
 from redis import Redis
 
 from .config import RedisSettings
+
 
 _cfg = RedisSettings()
 redis = Redis(

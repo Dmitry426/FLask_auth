@@ -48,6 +48,7 @@ services:
         - "../app:/src/app"
         - "./functional:/src/tests"
         - "../pyproject.toml:/src/pyproject.toml"
+        - "auth_api_logs_test:/src/logs"
       depends_on:
         app:
           condition: service_healthy
@@ -79,3 +80,7 @@ services:
       interval: 5s
       timeout: 20s
       retries: 5
+
+volumes:
+  auth_api_logs_test:
+
