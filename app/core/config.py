@@ -11,43 +11,56 @@ __all__ = [
 from enum import Enum
 from typing import List, Optional
 
-from pydantic import BaseSettings, Field, SecretStr
+from pydantic import BaseSettings, SecretStr
 
 
 class SQLAlchemySettings(BaseSettings):
     """Represents SQLAlchemy settings."""
 
-    connector: str = Field("postgresql", env="SQLALCHEMY_SCHEMA")
-    host: str = Field("postgres", env="SQLALCHEMY_HOST")
-    port: Optional[int] = Field(5432, env="SQLALCHEMY_PORT")
-    username: Optional[str] = Field(None, env="SQLALCHEMY_USERNAME")
-    password: Optional[SecretStr] = Field(None, env="SQLALCHEMY_PASSWORD")
-    database_name: Optional[str] = Field(None, env="SQLALCHEMY_DATABASE_NAME")
+    class Config:
+        env_prefix = "SQLALCHEMY_"
+
+    connector: str = "postgresql"
+    host: str = "postgres"
+    port: int = 5432
+    username: str = None
+    password: SecretStr = None
+    database_name: str = None
+    track_modifications: bool = False
 
 
 class RedisSettings(BaseSettings):
     """Represents Redis settings."""
 
-    host: str = Field("redis", env="REDIS_HOST")
-    port: int = Field(6379, env="REDIS_PORT")
-    db: int = Field(0, env="REDIS_DB")
+    class Config:
+        env_prefix = "REDIS_"
+
+    host: str = "redis"
+    port: int = 6379
+    db: int = 0
 
 
 class FlaskSettings(BaseSettings):
     """Represents Flask settings."""
 
-    host: str = Field("0.0.0.0", env="FLASK_HOST")
-    port: int = Field(3000, env="PORT_APP")
-    debug: bool = Field(True, env="FLASK_DEBUG")
-    redirect_uri: str = Field("localhost", env="REDIRECT_URI")
+    class Config:
+        env_prefix = "FLASK_"
+
+    host: str = "0.0.0.0"
+    port: int = 3000
+    debug: bool = True
+    redirect_uri: str = "localhost"
 
 
 class JWTSettings(BaseSettings):
     """Represents JWT settings."""
 
-    secret: Optional[str] = Field(None, env="JWT_SECRET_KEY")
-    access_exp: int = Field(60, env="JWT_ACCESS_TOKEN_EXPIRES")
-    refresh_exp: int = Field(7, env="JWT_REFRESH_TOKEN_EXPIRES")
+    class Config:
+        env_prefix = "JWT_"
+
+    secret: str = None
+    access_exp: int = 60
+    refresh_exp: int = 7
 
 
 class OAuthServiceSettings(BaseSettings):

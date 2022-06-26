@@ -66,6 +66,8 @@ RUN apt-get update && \
 
 # WARNING! Don't forget to mount "./app:/src/app"
 WORKDIR /src
+# Logs default  directory
+RUN mkdir /src/logs
 
 EXPOSE $PORT_APP
 

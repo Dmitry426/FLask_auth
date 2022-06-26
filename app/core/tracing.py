@@ -11,7 +11,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
 from .config import TracingSettings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("auth_api")
 
 
 def setup(app: Flask):

@@ -20,6 +20,7 @@ services:
     volumes:
       - "./app:/src/app"
       - "./migrations:/src/migrations"
+      - "auth_api_logs:/src/logs"
     depends_on:
       redis:
         condition: service_healthy
@@ -82,3 +83,5 @@ volumes:
     driver: "local"
   postgres-data:
     driver: "local"
+  auth_api_logs:
+

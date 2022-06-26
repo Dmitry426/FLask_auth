@@ -9,6 +9,9 @@ services:
       - WORKERS=2
       - ASYNC_CORES=2000
       - PROTOCOL=http
+
+    volumes:
+      - "auth_api_logs:/src/logs"
     env_file:
       - .env
     ports:
@@ -63,3 +66,4 @@ volumes:
     driver: "local"
   postgres-data:
     driver: "local"
+  auth_api_logs:
