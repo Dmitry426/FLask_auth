@@ -27,6 +27,7 @@ opentelemetry-sdk = "^1.10.0"
 opentelemetry-exporter-jaeger = "^1.10.0"
 opentelemetry-instrumentation-flask = "^0.29b1"
 Flask-Limiter = { version = "^2.2.0", extras = ["redis"] }
+ecs-logging = "^2.0.0"
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }
