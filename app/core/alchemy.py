@@ -1,5 +1,7 @@
 __all__ = ["db", "init_alchemy"]
 
+import logging
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
@@ -7,11 +9,15 @@ from .config import SQLAlchemySettings
 
 db = SQLAlchemy()
 
+logger = logging.getLogger("auth_api")
 
 def init_alchemy(app: Flask):
     cfg = SQLAlchemySettings()
     app.config["SQLALCHEMY_DATABASE_URI"] = _build_url(cfg)
+    app.config[
+        'SQLALCHEMY_TRACK_MODIFICATIONS'] = cfg.track_modifications
     db.init_app(app)
+    logger.info("Alchemy init successful")
 
 
 def _build_url(cfg: SQLAlchemySettings) -> str:
